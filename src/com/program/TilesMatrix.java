@@ -19,10 +19,13 @@ public class TilesMatrix {
     //Create matrix without values so it can be modified later
     public void createMatrix(){
         for(int i = 0; i < 4; i++){
-            for(int j = 0; j < 4; i++){
+            for(int j = 0; j < 4; j++){
                 tileMatrix[i][j] = 0;
             }
         }
+    }
+    public void setTileValue(int row, int column, int value){
+        tileMatrix[row][column] = value;
     }
     //Constructor to create tiles and matrix for them
     TilesMatrix(List<Tile> Tiles){
@@ -32,7 +35,11 @@ public class TilesMatrix {
 
     //Creating new tile after move
     private void createNewTile(){
-
+        int random = (int)(Math.random() * 16);
+        int get_row = random/4;
+        int get_column = random - random;
+        tiles.get(random).createTile();
+        this.setTileValue(get_row,get_column,tiles.get(random).getTile_value());
     }
 
     //Method to return score based on moves

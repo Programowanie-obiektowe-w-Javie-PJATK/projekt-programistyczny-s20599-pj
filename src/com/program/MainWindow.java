@@ -3,6 +3,8 @@ package com.program;
 import lombok.Getter;
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainWindow {
     @Getter
@@ -28,6 +30,20 @@ public class MainWindow {
         mainWindow.setSize(new Dimension(600,800));
         mainWindow.setResizable(false);
         mainWindow.setVisible(true);
+        //Creating matrix and first tiles on it
+        List<Tile> tiles = new ArrayList<>();
+        TilesMatrix tilesMatrix = new TilesMatrix(tiles);
+        tilesMatrix.createMatrix();
+        int random = (int)(Math.random() * 16);
+        int get_row = random/4;
+        int get_column = random - (get_row*4);
+        tiles.get(random).createTile();
+        tilesMatrix.setTileValue(get_row,get_column,tiles.get(random).getTile_value());
+        random = (int)(Math.random() * 16);
+        get_row = random/4;
+        get_column = random - (get_row*4);
+        tiles.get(random).createTile();
+        tilesMatrix.setTileValue(get_row,get_column,tiles.get(random).getTile_value());
         //Adding content to the frame and panel
         grid.setSize(new Dimension(600,800));
         scoreBoard.setSize(new Dimension(600,800));
@@ -39,5 +55,6 @@ public class MainWindow {
 
     public static void main(String[] args){
         new MainWindow();
+
     }
 }

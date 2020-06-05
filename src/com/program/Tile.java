@@ -61,7 +61,7 @@ public class Tile extends JPanel {
         return new Color(0,0,0);
     }
     //Create new tile after move
-    private void createTile(){
+    public void createTile(){
         int random = (int)(Math.random()*2);
         if(random == 2){
             setTile_value(2);
