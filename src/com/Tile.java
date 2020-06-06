@@ -40,11 +40,19 @@ class Tile extends JComponent {
         //Turning on antialiasing in a tile
         ((Graphics2D)g).setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         //Creating a tile as an filled rectangle
-        g.setColor(new Color(0x7A92D9));
+        g.setColor(new Color(0x6673B3));
         g.fillRect(0,0,getWidth(),getHeight());
         g.setColor(new Color(0x232E4D));
-        String text = Integer.toString(getValue());
+        String text;
+        if(getValue() == 0){
+            text = "";
+        }
+        else{
+            text = Integer.toString(getValue());
+        }
+
         //Drawing string in the center of a tile
+
         g.drawString(text,
                 (getWidth() - (getFontMetrics(ARIAL_ROUND).stringWidth(text))) / 2,
                 getHeight() / 2 + getFontMetrics(ARIAL_ROUND).getAscent() / 3);

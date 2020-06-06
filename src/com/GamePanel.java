@@ -22,7 +22,8 @@ class GamePanel extends JPanel {
 
     public void initialization(){
         removeAll();
-        setLayout(new GridLayout(getROWS(),getCOLUMNS()));
+        setLayout(new GridLayout(getROWS(),getCOLUMNS(),10,10));
+        setBackground(new Color(0x7A92D9));
         this.TILES = new Tile[getCOLUMNS()][getROWS()];
         for (int col = 0; col < getCOLUMNS(); col++){
             for (int row = 0; row < getROWS(); row++){
