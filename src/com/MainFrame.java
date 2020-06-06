@@ -8,6 +8,7 @@ import javax.swing.*;
 import java.awt.*;
 
 public class MainFrame extends JFrame{
+    private GameLogic game;
     //Panel which contains every panel
     private JPanel mainPanel;
     //Panel which contains game tiles
@@ -15,7 +16,6 @@ public class MainFrame extends JFrame{
     //Panel which contains menu buttons and scoreboard
     private JPanel menuPanel;
     @Getter
-
     private Dimension screenSize;
     @Getter
     @Setter
@@ -27,7 +27,14 @@ public class MainFrame extends JFrame{
     public void setScreenSize(){
         this.screenSize = Toolkit.getDefaultToolkit().getScreenSize();
     }
-
+    public void updateTiles(){
+        for (int col = 0; col < this.game.getCOLUMNS(); col++){
+            for (int row = 0; row < this.game.getROWS(); row++){
+                this.gamePanel.setValue(col, row, this.game.getTileValue(col, row));
+            }
+        }
+        this.gamePanel.repaint();
+    }
     public MainFrame(){
         super("2048 by Kamil Rominski");
         //Create frame somewhere in the middle of the screen
@@ -38,6 +45,7 @@ public class MainFrame extends JFrame{
         //Creating main panel to attach other components
         this.mainPanel = new JPanel();
         add(this.mainPanel);
+        this.game = new GameLogic();
         this.gamePanel = new GamePanel();
         this.gamePanel.setBorder(BorderFactory.createLineBorder(new Color(0x7A92D9),10));
         this.menuPanel = new JPanel();
@@ -48,6 +56,10 @@ public class MainFrame extends JFrame{
         this.mainPanel.add(this.gamePanel);
         //Align panels one under other
         this.mainPanel.setLayout(new BoxLayout(this.mainPanel,1));
+        //Generate 2 starting tiles
+        this.game.generateTiles();
+        this.game.generateTiles();
+        updateTiles();
     }
     public static void main(String[] args) {
         MainFrame frame = new MainFrame();
