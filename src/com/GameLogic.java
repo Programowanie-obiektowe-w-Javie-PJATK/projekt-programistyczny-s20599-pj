@@ -28,7 +28,7 @@ public class GameLogic {
         grid[col][row] = value;
     }
     //Generating tiles on board
-    public boolean generateTiles(){
+    public boolean generateTile(){
         int col;
         int row;
         if (isGridFull()){
@@ -49,8 +49,8 @@ public class GameLogic {
     }
     //Checks if board is full(no space left to generate new tile)
     public boolean isGridFull(){
-        for (int col = 1; col <= getCOLUMNS(); col++){
-            for (int row = 1; row <= getROWS(); row++){
+        for (int col = 0; col < getCOLUMNS(); col++){
+            for (int row = 0; row < getROWS(); row++){
                 if(grid[col][row] == 0){
                     return false;
                 }
@@ -80,11 +80,11 @@ public class GameLogic {
      * If two tiles with the same value are together, value will be timed by 2
      * Empty tiles will be filled with 0(no text on GUI)
      */
-    public void goLeft(){
+    public void goUp(){
         int resCol;
-        for (int row = 1; row <= getROWS(); row++){
-            resCol = 1;
-            for (int col = 2; col <= getCOLUMNS(); col++){
+        for (int row = 0; row < getROWS(); row++){
+            resCol = 0;
+            for (int col = 1; col < getCOLUMNS(); col++){
                 if(resCol == col || grid[col][row] == 0){
                     continue;
                 }
@@ -109,11 +109,11 @@ public class GameLogic {
      * If two tiles with the same value are together, value will be timed by 2
      * Empty tiles will be filled with 0(no text on GUI)
      */
-    public void goRight(){
+    public void goDown(){
         int resCol;
-        for (int row = 1; row <= getROWS(); row++){
-            resCol = getCOLUMNS();
-            for (int col = getCOLUMNS() - 1; col >= 1 ; col--){
+        for (int row = 0; row < getROWS(); row++){
+            resCol = getCOLUMNS() - 1;
+            for (int col = getCOLUMNS() - 1; col >= 0 ; col--){
                 if(resCol == col || grid[col][row] == 0){
                     continue;
                 }
@@ -138,11 +138,11 @@ public class GameLogic {
      * If two tiles with the same value are together, value will be timed by 2
      * Empty tiles will be filled with 0(no text on GUI)
      */
-    public void goUp(){
+    public void goLeft(){
         int resRow;
-        for (int col = 1; col <= getCOLUMNS(); col++){
-            resRow = 1;
-            for (int row = 2; row <= getROWS(); row++){
+        for (int col = 0; col < getCOLUMNS(); col++){
+            resRow = 0;
+            for (int row = 1; row < getROWS(); row++){
                 if(resRow == row || grid[col][row] == 0){
                     continue;
                 }
@@ -167,11 +167,11 @@ public class GameLogic {
      * If two tiles with the same value are together, value will be timed by 2
      * Empty tiles will be filled with 0(no text on GUI)
      */
-    public void goDown(){
+    public void goRight(){
         int resRow;
-        for (int col = 1; col <= getCOLUMNS(); col++){
-            resRow = getROWS();
-            for (int row = getROWS() - 1; row >= 1; row--){
+        for (int col = 0; col < getCOLUMNS(); col++){
+            resRow = getROWS() - 1;
+            for (int row = getROWS() - 1; row >= 0; row--){
                 if(resRow == row || grid[col][row] == 0){
                     continue;
                 }

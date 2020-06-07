@@ -57,15 +57,4 @@ class Tile extends JComponent {
                 (getWidth() - (getFontMetrics(ARIAL_ROUND).stringWidth(text))) / 2,
                 getHeight() / 2 + getFontMetrics(ARIAL_ROUND).getAscent() / 3);
     }
-
-    public static void main(String[] args) {
-        JFrame frame = new JFrame();
-        JPanel test = new JPanel();
-        test.add(new Tile(2048));
-        frame.add(test);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.pack();
-        frame.setVisible(true);
-    }
-
 }

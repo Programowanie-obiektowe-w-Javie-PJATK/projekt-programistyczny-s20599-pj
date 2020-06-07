@@ -6,6 +6,9 @@ import lombok.Setter;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.security.Key;
 
 public class MainFrame extends JFrame{
     private GameLogic game;
@@ -57,13 +60,44 @@ public class MainFrame extends JFrame{
         //Align panels one under other
         this.mainPanel.setLayout(new BoxLayout(this.mainPanel,1));
         //Generate 2 starting tiles
-        this.game.generateTiles();
-        this.game.generateTiles();
+        this.game.generateTile();
+        this.game.generateTile();
         updateTiles();
+        //Key detection
+        addKeyListener(new KeyListener() {
+            @Override
+            public void keyTyped(KeyEvent e) {}
+
+            @Override
+            public void keyPressed(KeyEvent keyEvent) {
+                if (keyEvent.getKeyCode() == KeyEvent.VK_LEFT){
+                    MainFrame.this.game.goLeft();
+                    MainFrame.this.game.generateTile();
+                    MainFrame.this.updateTiles();
+                }
+                else if (keyEvent.getKeyCode() == KeyEvent.VK_UP){
+                    MainFrame.this.game.goUp();
+                    MainFrame.this.game.generateTile();
+                    MainFrame.this.updateTiles();
+                }
+                else if (keyEvent.getKeyCode() == KeyEvent.VK_RIGHT){
+                    MainFrame.this.game.goRight();
+                    MainFrame.this.game.generateTile();
+                    MainFrame.this.updateTiles();
+                }
+                else if (keyEvent.getKeyCode() == KeyEvent.VK_DOWN){
+                    MainFrame.this.game.goDown();
+                    MainFrame.this.game.generateTile();
+                    MainFrame.this.updateTiles();
+                }
+            }
+
+            @Override
+            public void keyReleased(KeyEvent keyEvent) {}
+        });
     }
     public static void main(String[] args) {
         MainFrame frame = new MainFrame();
-
         frame.setSize(new Dimension(450,650));
         frame.setResizable(false);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
