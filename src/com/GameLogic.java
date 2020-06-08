@@ -1,7 +1,9 @@
 package com;
 
+import com.sun.tools.javac.Main;
 import lombok.Getter;
 
+import javax.swing.*;
 import java.util.Random;
 
 public class GameLogic {
@@ -62,14 +64,61 @@ public class GameLogic {
     public boolean canPlay(){
         if(!isGridFull())
             return true;
-        for (int col = 1; col <= getCOLUMNS(); col++){
-            for (int row = 1; row <= getROWS(); row++){
-                if(grid[col][row] == grid[col][row+1]
-                        || grid[col][row] == grid[col][row-1]
-                        || grid[col][row] == grid[col+1][row]
-                        || grid[col][row] == grid[col-1][row]){
-                    return true;
+        for (int col = 0; col < getCOLUMNS(); col++){
+            for (int row = 0; row < getROWS(); row++){
+                if(col == 0 && row == 0){
+                    if(grid[col][row] == grid[col][row+1]
+                            || grid[col][row] == grid[col+1][row])
+                        return true;
                 }
+                else if (col == 0 && row == getROWS() - 1){
+                    if(grid[col][row] == grid[col+1][row]
+                        || grid[col][row] == grid[col][row-1])
+                        return true;
+                }
+                else if (col == getCOLUMNS() - 1 && row == 0){
+                    if(grid[col][row] == grid[col-1][row]
+                            || grid[col][row] == grid[col][row+1])
+                        return true;
+                }
+                else if (col == getCOLUMNS() - 1 && row == getROWS() - 1){
+                    if(grid[col][row] == grid[col-1][row]
+                            || grid[col][row] == grid[col][row-1])
+                        return true;
+                }
+                else if (col == 0){
+                    if(grid[col][row] == grid[col+1][row]
+                            || grid[col][row] == grid[col][row-1]
+                            || grid[col][row] == grid[col][row+1])
+                        return true;
+                }
+                else if (col == getCOLUMNS() - 1){
+                    if(grid[col][row] == grid[col-1][row]
+                            || grid[col][row] == grid[col][row-1]
+                            || grid[col][row] == grid[col][row+1])
+                        return true;
+                }
+                else if (row == 0){
+                    if(grid[col][row] == grid[col-1][row]
+                            || grid[col][row] == grid[col+1][row]
+                            || grid[col][row] == grid[col][row+1])
+                        return true;
+                }
+                else if (row == getROWS() - 1){
+                    if(grid[col][row] == grid[col-1][row]
+                            || grid[col][row] == grid[col+1][row]
+                            || grid[col][row] == grid[col][row-1])
+                        return true;
+                }
+                else{
+                    if(grid[col][row] == grid[col][row+1]
+                            || grid[col][row] == grid[col][row-1]
+                            || grid[col][row] == grid[col+1][row]
+                            || grid[col][row] == grid[col-1][row]){
+                        return true;
+                    }
+                }
+
             }
         }
         return false;

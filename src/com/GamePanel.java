@@ -31,6 +31,7 @@ class GamePanel extends JPanel {
                 add(this.TILES[col][row]);
             }
         }
+
     }
     public GamePanel(){
         initialization();
