@@ -1,9 +1,7 @@
 package com;
 
-import com.sun.tools.javac.Main;
 import lombok.Getter;
 
-import javax.swing.*;
 import java.io.Serializable;
 import java.util.Random;
 
@@ -14,7 +12,7 @@ public class GameLogic implements Serializable {
     public static final int ROWS = 4;
     private int[][] grid;
     @Getter
-    private int score = 0;
+    private int score = 600;
 
     public void setScore(int score) {
         this.score = this.score + score;

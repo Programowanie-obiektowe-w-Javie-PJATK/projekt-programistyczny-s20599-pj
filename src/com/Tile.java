@@ -7,7 +7,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
-import java.net.URL;
 
 class Tile extends JComponent {
     private static final int SCALE = 100;
@@ -75,7 +74,6 @@ class Tile extends JComponent {
         //Turning on antialiasing in a tile
         ((Graphics2D)g).setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         //Creating a tile as an filled rectangle
-        //g.setColor(new Color(0x6673B3));
         g.setColor(color);
         g.fillRect(0,0,getWidth(),getHeight());
         g.setColor(Color.BLACK);

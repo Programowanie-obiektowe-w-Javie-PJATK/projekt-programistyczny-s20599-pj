@@ -12,8 +12,11 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.*;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
-public class MainFrame extends JFrame{
+public class MainFrame extends JFrame {
     private GameLogic game;
     //Panel which contains every panel
     private JPanel mainPanel;
@@ -38,11 +41,12 @@ public class MainFrame extends JFrame{
     @Getter
     @Setter
     private static int gameOverSet = 0;
+    private Runnable timer;
 
     public void gameOver(){
 
         if(!this.game.canPlay() && getGameOverSet() == 0) {
-            JOptionPane.showMessageDialog(this.mainPanel, "Game Over! Your score was ", "Game Over", JOptionPane.PLAIN_MESSAGE);
+            JOptionPane.showMessageDialog(this.mainPanel, "Game Over! Your score was " + this.game.getScore(), "Game Over", JOptionPane.PLAIN_MESSAGE);
             setGameOverSet(1);
         }
     }
@@ -84,6 +88,28 @@ public class MainFrame extends JFrame{
         }
     }
 
+    public void scoreboardTimer(){
+        ScheduledExecutorService executorService = Executors.newScheduledThreadPool(1);
+        this.timer = new Runnable() {
+            @Override
+            public void run() {
+                MainFrame.this.game.setScore(-1);
+                MainFrame.this.scoreboard.setScore(MainFrame.this.game.getScore());
+                MainFrame.this.scoreboard.repaint();
+                if(getGameOverSet() == 1){
+                    try {
+                        executorService.awaitTermination(0,TimeUnit.SECONDS);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    executorService.shutdownNow();
+                }
+            }
+        };
+        if(getGameOverSet() == 0) {
+            executorService.scheduleAtFixedRate(this.timer, 0, 1, TimeUnit.SECONDS);
+        }
+    }
     //Checks if file exists
     public static boolean fileExists(Object object){
         return new File(object.getClass() + ".dat").isFile();
@@ -129,6 +155,7 @@ public class MainFrame extends JFrame{
                 MainFrame.this.game.generateTile();
                 MainFrame.this.setGameOverSet(0);
                 MainFrame.this.updateTiles();
+                MainFrame.this.scoreboardTimer();
             }
         });
 
@@ -158,15 +185,13 @@ public class MainFrame extends JFrame{
             }
         });
         this.menuPanel.add(this.loadGame, constraints);
-        this.scoreboard = new Scoreboard();
-        constraints.ipady = 0;
-        constraints.ipadx = 0;
-        constraints.weightx = 0.5;
+        this.scoreboard = new Scoreboard(this.game.getScore());
+        constraints.weightx = 0;
+        constraints.gridx = 1;
         constraints.gridy = 0;
-        constraints.gridx = 2;
         constraints.gridheight = 3;
-        constraints.gridwidth = 3;
         this.menuPanel.add(this.scoreboard,constraints);
+        scoreboardTimer();
     }
 
     private void gamePanel(){
@@ -188,32 +213,40 @@ public class MainFrame extends JFrame{
                     MainFrame.this.game.generateTile();
                     MainFrame.this.updateTiles();
                     MainFrame.this.gameOver();
+                    MainFrame.this.scoreboard.setScore(MainFrame.this.game.getScore());
+                    MainFrame.this.scoreboard.repaint();
                 }
                 else if (keyEvent.getKeyCode() == KeyEvent.VK_UP){
                     MainFrame.this.game.goUp();
                     MainFrame.this.game.generateTile();
                     MainFrame.this.updateTiles();
                     MainFrame.this.gameOver();
+                    MainFrame.this.scoreboard.setScore(MainFrame.this.game.getScore());
+                    MainFrame.this.scoreboard.repaint();
                 }
                 else if (keyEvent.getKeyCode() == KeyEvent.VK_RIGHT){
                     MainFrame.this.game.goRight();
                     MainFrame.this.game.generateTile();
                     MainFrame.this.updateTiles();
                     MainFrame.this.gameOver();
+                    MainFrame.this.scoreboard.setScore(MainFrame.this.game.getScore());
+                    MainFrame.this.scoreboard.repaint();
                 }
                 else if (keyEvent.getKeyCode() == KeyEvent.VK_DOWN){
                     MainFrame.this.game.goDown();
                     MainFrame.this.game.generateTile();
                     MainFrame.this.updateTiles();
                     MainFrame.this.gameOver();
+                    MainFrame.this.scoreboard.setScore(MainFrame.this.game.getScore());
+                    MainFrame.this.scoreboard.repaint();
                 }
             }
 
             @Override
             public void keyReleased(KeyEvent keyEvent) {}
         });
-    }
 
+    }
 
     public MainFrame(){
         super("2048 by Kamil Rominski");
