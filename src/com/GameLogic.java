@@ -4,15 +4,21 @@ import com.sun.tools.javac.Main;
 import lombok.Getter;
 
 import javax.swing.*;
+import java.io.Serializable;
 import java.util.Random;
 
-public class GameLogic {
+public class GameLogic implements Serializable {
     @Getter
     public static final int COLUMNS = 4;
     @Getter
     public static final int ROWS = 4;
     private int[][] grid;
+    @Getter
+    private int score = 0;
 
+    public void setScore(int score) {
+        this.score = this.score + score;
+    }
     public GameLogic(){
         grid = new int[getCOLUMNS()][getROWS()];
         for (int col = 0; col < getCOLUMNS(); col++){
@@ -21,6 +27,7 @@ public class GameLogic {
             }
         }
     }
+
 
     public int getTileValue(int col, int row){
         return grid[col][row];
@@ -138,7 +145,10 @@ public class GameLogic {
                     continue;
                 }
                 else if (grid[resCol][row] == grid[col][row]){
+                    //Merge and increase of the value
                     grid[resCol][row] = grid[resCol][row] * 2;
+                    //update score
+                    setScore(getTileValue(resCol,row));
                     grid[col][row] = 0;
                     resCol++;
                 }
@@ -167,7 +177,10 @@ public class GameLogic {
                     continue;
                 }
                 else if (grid[resCol][row] == grid[col][row]){
+                    //Merge and increase of the value
                     grid[resCol][row] = grid[resCol][row] * 2;
+                    //update score
+                    setScore(getTileValue(resCol,row));
                     grid[col][row] = 0;
                     resCol--;
                 }
@@ -196,7 +209,10 @@ public class GameLogic {
                     continue;
                 }
                 else if (grid[col][resRow] == grid[col][row]){
+                    //Merge and increase of the value
                     grid[col][resRow] = grid[col][resRow] * 2;
+                    //update score
+                    setScore(getTileValue(col,resRow));
                     grid[col][row] = 0;
                     resRow++;
                 }
@@ -225,7 +241,10 @@ public class GameLogic {
                     continue;
                 }
                 else if (grid[col][resRow] == grid[col][row]){
+                    //Merge and increase of the value
                     grid[col][resRow] = grid[col][resRow] * 2;
+                    //update score
+                    setScore(getTileValue(col,resRow));
                     grid[col][row] = 0;
                     resRow--;
                 }

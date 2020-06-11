@@ -4,8 +4,9 @@ import lombok.Getter;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.Serializable;
 
-class GamePanel extends JPanel {
+class GamePanel extends JPanel implements Serializable {
     @Getter
     private static final int COLUMNS = 4;
     @Getter
@@ -23,7 +24,7 @@ class GamePanel extends JPanel {
     public void initialization(){
         removeAll();
         setLayout(new GridLayout(getROWS(),getCOLUMNS(),10,10));
-        setBackground(new Color(0x7A92D9));
+        setBackground(new Color(0x884C4C));
         this.TILES = new Tile[getCOLUMNS()][getROWS()];
         for (int col = 0; col < getCOLUMNS(); col++){
             for (int row = 0; row < getROWS(); row++){
