@@ -41,8 +41,8 @@ public class GameLogic implements Serializable {
             col = new Random().nextInt(getCOLUMNS()) ;
             row = new Random().nextInt(getROWS());
         }while (grid[col][row] != 0);
-
-        if((new Random().nextInt() * 9) % 2 == 0){
+        int gen = new Random().nextInt() * 100;
+        if(gen <= 75){
             grid[col][row] = 2;
         }
         else

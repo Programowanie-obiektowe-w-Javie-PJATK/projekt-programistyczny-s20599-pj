@@ -12,6 +12,12 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * Klasa <code>MainFrame</code> to glowna klasa programu
+ * @author Kamil Rominski
+ * @version 1.0
+ */
+
 public class MainFrame extends JFrame {
     private GameLogic game;
     //Panel which contains every panel
@@ -82,7 +88,6 @@ public class MainFrame extends JFrame {
         }
         this.gamePanel.revalidate();
         this.gamePanel.repaint();
-        System.out.println(this.game.getScore());
     }
 
     private void save(){
