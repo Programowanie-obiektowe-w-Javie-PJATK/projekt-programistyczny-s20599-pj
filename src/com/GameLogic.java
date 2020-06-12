@@ -30,10 +30,6 @@ public class GameLogic implements Serializable {
     public int getTileValue(int col, int row){
         return grid[col][row];
     }
-
-    public void setTileValue(int col, int row, int value){
-        grid[col][row] = value;
-    }
     //Generating tiles on board
     public boolean generateTile(){
         int col;
@@ -203,7 +199,6 @@ public class GameLogic implements Serializable {
             resRow = 0;
             for (int row = 1; row < getROWS(); row++){
                 if(resRow == row || grid[col][row] == 0){
-                    continue;
                 }
                 else if (grid[col][resRow] == grid[col][row]){
                     //Merge and increase of the value

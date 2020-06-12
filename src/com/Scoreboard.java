@@ -24,19 +24,19 @@ class Scoreboard extends JComponent {
         ge.registerFont(ARIAL_ROUND);
         setScore(score);
         setFont(ARIAL_ROUND);
-        setPreferredSize(new Dimension(200,100));
+        setPreferredSize(new Dimension(200,90));
     }
     @Override
     public void paintComponent(Graphics g){
         super.paintComponent(g);
-        g.setColor(Color.YELLOW);
+        g.setColor(new Color(0x884C4C));
         //Turn on antialiasing in the object
         ((Graphics2D)g).setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        g.fillRoundRect(0,0,200,100,30,30);
+        g.fillRoundRect(0,0,200,90,30,30);
         g.setColor(Color.BLACK);
-        g.drawString("Score",(getWidth() - (getFontMetrics(ARIAL_ROUND).stringWidth("score"))) / 2,20);
+        g.drawString("Score",(getWidth() - (getFontMetrics(ARIAL_ROUND).stringWidth("score"))) / 2,40);
         g.drawString(Integer.toString(score),
                 (getWidth() - (getFontMetrics(ARIAL_ROUND).stringWidth((Integer.toString(score))))) / 2,
-                getHeight() / 2 + getFontMetrics(ARIAL_ROUND).getAscent() / 3);
+                70);
     }
 }

@@ -34,6 +34,7 @@ class GamePanel extends JPanel implements Serializable {
             }
         }
     }
+
     public void reset(){
         for (int col = 0; col < getCOLUMNS(); col++){
             for (int row = 0; row < getROWS(); row++){
@@ -41,7 +42,6 @@ class GamePanel extends JPanel implements Serializable {
             }
         }
     }
-
 
     public GamePanel(){
         initialization();
