@@ -17,6 +17,7 @@ public class GameLogic implements Serializable {
     public void setScore(int score) {
         this.score = this.score + score;
     }
+
     public GameLogic(){
         grid = new int[getCOLUMNS()][getROWS()];
         for (int col = 0; col < getCOLUMNS(); col++){
@@ -25,7 +26,6 @@ public class GameLogic implements Serializable {
             }
         }
     }
-
 
     public int getTileValue(int col, int row){
         return grid[col][row];
@@ -128,7 +128,6 @@ public class GameLogic implements Serializable {
         }
         return false;
     }
-
     /**
      * Move tiles to the left
      * If two tiles with the same value are together, value will be timed by 2

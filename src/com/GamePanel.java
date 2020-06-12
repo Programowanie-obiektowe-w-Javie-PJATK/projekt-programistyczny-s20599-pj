@@ -25,6 +25,7 @@ class GamePanel extends JPanel implements Serializable {
         removeAll();
         setLayout(new GridLayout(getROWS(),getCOLUMNS(),10,10));
         setBackground(new Color(0x884C4C));
+        this.TILES = null;
         this.TILES = new Tile[getCOLUMNS()][getROWS()];
         for (int col = 0; col < getCOLUMNS(); col++){
             for (int row = 0; row < getROWS(); row++){
@@ -32,8 +33,16 @@ class GamePanel extends JPanel implements Serializable {
                 add(this.TILES[col][row]);
             }
         }
-
     }
+    public void reset(){
+        for (int col = 0; col < getCOLUMNS(); col++){
+            for (int row = 0; row < getROWS(); row++){
+                this.TILES[col][row].setValue(0);
+            }
+        }
+    }
+
+
     public GamePanel(){
         initialization();
     }

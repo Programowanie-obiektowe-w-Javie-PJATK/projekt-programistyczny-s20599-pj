@@ -10,7 +10,6 @@ import java.io.IOException;
 
 class Tile extends JComponent {
     private static final int SCALE = 100;
-    private static final int BORDER = 10;
     private static final int FONT_SIZE = 38;
     private static Font ARIAL_ROUND = null;
     @Getter
@@ -84,9 +83,7 @@ class Tile extends JComponent {
         else{
             text = Integer.toString(getValue());
         }
-
         //Drawing string in the center of a tile
-
         g.drawString(text,
                 (getWidth() - (getFontMetrics(ARIAL_ROUND).stringWidth(text))) / 2,
                 getHeight() / 2 + getFontMetrics(ARIAL_ROUND).getAscent() / 3);

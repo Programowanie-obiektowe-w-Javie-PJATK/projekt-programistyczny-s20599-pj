@@ -1,6 +1,5 @@
 package com;
 
-
 import com.sun.tools.javac.Main;
 import lombok.Getter;
 import lombok.Setter;
@@ -22,6 +21,7 @@ public class MainFrame extends JFrame {
     private JPanel mainPanel;
     //Panel which contains game tiles
     private GamePanel gamePanel;
+    private GamePanel gamePanelLoad;
     //Panel which contains menu buttons and scoreboard
     private JPanel menuPanel;
     //Scoreboard
@@ -41,32 +41,57 @@ public class MainFrame extends JFrame {
     @Getter
     @Setter
     private static int gameOverSet = 0;
-    private Runnable timer;
 
-    public void gameOver(){
-
+    private void gameOver(){
         if(!this.game.canPlay() && getGameOverSet() == 0) {
-            JOptionPane.showMessageDialog(this.mainPanel, "Game Over! Your score was " + this.game.getScore(), "Game Over", JOptionPane.PLAIN_MESSAGE);
             setGameOverSet(1);
+            String[] options = {"New game","Exit"};
+            JDialog.setDefaultLookAndFeelDecorated(false);
+            int option = JOptionPane.showOptionDialog(this.mainPanel,"Game Over! Your score was " + this.game.getScore(),"Game Over",JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE,null,options,options[0]);
+            if(option == 0){
+                newGame();
+            }
+            else{
+                System.exit(0);
+            }
         }
     }
+    private void gameWin(){
+        for(int col = 0; col < 4; col++)
+            for (int row = 0; row < 4; row++){
+                if(MainFrame.this.game.getTileValue(col,row) == 2048){
+                    setGameOverSet(1);
+                    String[] options = {"New game","Exit"};
+                    JDialog.setDefaultLookAndFeelDecorated(false);
+                    int option = JOptionPane.showOptionDialog(this.mainPanel,"You Won! Your score was " + this.game.getScore(),"You Won!",JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE,null,options,options[0]);
 
-    public void setScreenSize(){
+                    if(option == 0){
+                        newGame();
+                    }
+                    else{
+                        System.exit(0);
+                    }
+                    break;
+                }
+            }
+    }
+
+    private void setScreenSize(){
         this.screenSize = Toolkit.getDefaultToolkit().getScreenSize();
     }
 
-    public void updateTiles(){
-        for (int col = 0; col < this.game.getCOLUMNS(); col++){
-            for (int row = 0; row < this.game.getROWS(); row++){
+    private void updateTiles(){
+        for (int col = 0; col < GameLogic.getCOLUMNS(); col++){
+            for (int row = 0; row < GameLogic.getROWS(); row++){
                 this.gamePanel.setValue(col, row, this.game.getTileValue(col, row));
             }
         }
+        this.gamePanel.revalidate();
         this.gamePanel.repaint();
         System.out.println(this.game.getScore());
-        //System.out.println(SwingUtilities.isEventDispatchThread());
     }
 
-    public void save(){
+    private void save(){
         FileOutputStream file;
         try{
             file = new FileOutputStream(this.game.getClass() + ".dat");
@@ -88,17 +113,30 @@ public class MainFrame extends JFrame {
         }
     }
 
-    public void scoreboardTimer(){
+    private void newGame(){
+        MainFrame.this.gamePanel.reset();
+        MainFrame.this.game = new GameLogic();
+        MainFrame.this.game.generateTile();
+        MainFrame.this.game.generateTile();
+        MainFrame.this.updateTiles();
+        if(MainFrame.getGameOverSet() == 1){
+            setGameOverSet(0);
+            scoreboardTimer();
+        }
+    }
+
+    private void scoreboardTimer(){
         ScheduledExecutorService executorService = Executors.newScheduledThreadPool(1);
-        this.timer = new Runnable() {
+        Runnable timer = new Runnable() {
             @Override
             public void run() {
-                MainFrame.this.game.setScore(-1);
+                if (MainFrame.this.game.getScore() > 0)
+                    MainFrame.this.game.setScore(-1);
                 MainFrame.this.scoreboard.setScore(MainFrame.this.game.getScore());
                 MainFrame.this.scoreboard.repaint();
-                if(getGameOverSet() == 1){
+                if (getGameOverSet() == 1) {
                     try {
-                        executorService.awaitTermination(0,TimeUnit.SECONDS);
+                        executorService.awaitTermination(0, TimeUnit.SECONDS);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
@@ -107,7 +145,7 @@ public class MainFrame extends JFrame {
             }
         };
         if(getGameOverSet() == 0) {
-            executorService.scheduleAtFixedRate(this.timer, 0, 1, TimeUnit.SECONDS);
+            executorService.scheduleAtFixedRate(timer, 0, 1, TimeUnit.SECONDS);
         }
     }
     //Checks if file exists
@@ -116,24 +154,23 @@ public class MainFrame extends JFrame {
     }
 
     public void load(){
-        if(fileExists(this.game) && fileExists(this.gamePanel)){
+        if(fileExists(MainFrame.this.game) && fileExists(MainFrame.this.gamePanel)){
             FileInputStream file;
             FileInputStream file1;
             try{
-                file = new FileInputStream(this.game.getClass() + ".dat");
+                this.gamePanelLoad = new GamePanel();
+                file = new FileInputStream(MainFrame.this.game.getClass() + ".dat");
                 ObjectInputStream input = new ObjectInputStream(file);
-                this.game = (GameLogic)input.readObject();
+                MainFrame.this.game = (GameLogic)input.readObject();
                 input.close();
-                file1 = new FileInputStream(this.gamePanel.getClass() + ".dat");
+                file1 = new FileInputStream(MainFrame.this.gamePanel.getClass() + ".dat");
                 ObjectInputStream input1 = new ObjectInputStream(file1);
-                this.gamePanel = (GamePanel)input1.readObject();
+                this.gamePanelLoad = (GamePanel)input1.readObject();
                 input1.close();
-
             }
-            catch (IOException e) {
-                e.printStackTrace();
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
+            catch (IOException | ClassNotFoundException e) {
+                JOptionPane.showMessageDialog(this.mainPanel, e.getMessage() , "Error message", JOptionPane.PLAIN_MESSAGE);
+
             }
         }
     }
@@ -148,17 +185,9 @@ public class MainFrame extends JFrame {
         this.newGame.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-                //MainFrame.this.gamePanel = new GamePanel();
-                MainFrame.this.gamePanel.initialization();
-                MainFrame.this.game = new GameLogic();
-                MainFrame.this.game.generateTile();
-                MainFrame.this.game.generateTile();
-                MainFrame.this.setGameOverSet(0);
-                MainFrame.this.updateTiles();
-                MainFrame.this.scoreboardTimer();
+                newGame();
             }
         });
-
         this.menuPanel.setLayout(new GridBagLayout());
         GridBagConstraints constraints = new GridBagConstraints();
         constraints.gridx = 0;
@@ -181,7 +210,14 @@ public class MainFrame extends JFrame {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
                 MainFrame.this.load();
+                for(int col = 0; col < 4; col++)
+                    for(int row = 0; row < 4; row++)
+                        MainFrame.this.gamePanel.setValue(col,row,MainFrame.this.gamePanelLoad.getValue(col,row));
                 MainFrame.this.updateTiles();
+                if(MainFrame.getGameOverSet() == 1){
+                    setGameOverSet(0);
+                    scoreboardTimer();
+                }
             }
         });
         this.menuPanel.add(this.loadGame, constraints);
@@ -193,7 +229,14 @@ public class MainFrame extends JFrame {
         this.menuPanel.add(this.scoreboard,constraints);
         scoreboardTimer();
     }
-
+    private void moveAction(){
+        MainFrame.this.game.generateTile();
+        MainFrame.this.updateTiles();
+        MainFrame.this.gameOver();
+        MainFrame.this.gameWin();
+        MainFrame.this.scoreboard.setScore(MainFrame.this.game.getScore());
+        MainFrame.this.scoreboard.repaint();
+    }
     private void gamePanel(){
         this.game = new GameLogic();
         this.gamePanel = new GamePanel();
@@ -205,47 +248,28 @@ public class MainFrame extends JFrame {
         addKeyListener(new KeyListener() {
             @Override
             public void keyTyped(KeyEvent e) {}
-
             @Override
             public void keyPressed(KeyEvent keyEvent) {
                 if (keyEvent.getKeyCode() == KeyEvent.VK_LEFT){
                     MainFrame.this.game.goLeft();
-                    MainFrame.this.game.generateTile();
-                    MainFrame.this.updateTiles();
-                    MainFrame.this.gameOver();
-                    MainFrame.this.scoreboard.setScore(MainFrame.this.game.getScore());
-                    MainFrame.this.scoreboard.repaint();
+                    moveAction();
                 }
                 else if (keyEvent.getKeyCode() == KeyEvent.VK_UP){
                     MainFrame.this.game.goUp();
-                    MainFrame.this.game.generateTile();
-                    MainFrame.this.updateTiles();
-                    MainFrame.this.gameOver();
-                    MainFrame.this.scoreboard.setScore(MainFrame.this.game.getScore());
-                    MainFrame.this.scoreboard.repaint();
+                    moveAction();
                 }
                 else if (keyEvent.getKeyCode() == KeyEvent.VK_RIGHT){
                     MainFrame.this.game.goRight();
-                    MainFrame.this.game.generateTile();
-                    MainFrame.this.updateTiles();
-                    MainFrame.this.gameOver();
-                    MainFrame.this.scoreboard.setScore(MainFrame.this.game.getScore());
-                    MainFrame.this.scoreboard.repaint();
+                    moveAction();
                 }
                 else if (keyEvent.getKeyCode() == KeyEvent.VK_DOWN){
                     MainFrame.this.game.goDown();
-                    MainFrame.this.game.generateTile();
-                    MainFrame.this.updateTiles();
-                    MainFrame.this.gameOver();
-                    MainFrame.this.scoreboard.setScore(MainFrame.this.game.getScore());
-                    MainFrame.this.scoreboard.repaint();
+                    moveAction();
                 }
             }
-
             @Override
             public void keyReleased(KeyEvent keyEvent) {}
         });
-
     }
 
     public MainFrame(){
@@ -260,16 +284,11 @@ public class MainFrame extends JFrame {
         add(this.mainPanel);
         gamePanel();
         menuPanel();
-
-
         //Add other panels to mainPanel
-
         this.mainPanel.add(this.menuPanel);
         this.mainPanel.add(this.gamePanel);
         //Align panels one under other
         this.mainPanel.setLayout(new BoxLayout(this.mainPanel,1));
-        //Generate 2 starting tiles
-
     }
     public static void main(String[] args) {
         MainFrame frame = new MainFrame();
