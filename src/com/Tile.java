@@ -19,8 +19,8 @@ class Tile extends JComponent {
     public Tile(int value){
         try {
             ARIAL_ROUND = Font.createFont(Font.TRUETYPE_FONT, new File("ARLRDBD.TTF")).deriveFont(Font.PLAIN,FONT_SIZE);
-        } catch (FontFormatException | IOException e) {
-            e.printStackTrace();
+        } catch (FontFormatException | IOException | NullPointerException e) {
+            JOptionPane.showMessageDialog(this, "Error occurred while retrieving save file." , "Error message", JOptionPane.PLAIN_MESSAGE);
         }
         GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
         ge.registerFont(ARIAL_ROUND);
